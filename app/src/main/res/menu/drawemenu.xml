@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <item android:id="@+id/home"  android:title="Home" android:icon="@drawable/home"/>
+    <item android:id="@+id/catagory"  android:title="Catagory" android:icon="@drawable/list"/>
+    <item android:id="@+id/myorder"  android:title="My orders" android:icon="@drawable/history"/>
+    <item android:id="@+id/favourites"  android:title="Favourites" android:icon="@drawable/favorite"/>
+    <item android:id="@+id/admin"  android:title="Admin" android:icon="@drawable/person"/>
+    <item android:id="@+id/signout"  android:title="SignOut" android:icon="@drawable/exit"/>
+</menu>
