@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/admindesh"
+    tools:context=".Admin_Deshboard">
+
+    <FrameLayout
+        android:id="@+id/toolbar_relative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/mytoolbaradmin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/header_bg"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/windowNoTitle" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerviewadmin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="58dp"
+            >
+
+        </android.support.v7.widget.RecyclerView>
+    </FrameLayout>
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigationViewadmin"
+        app:headerLayout="@layout/header"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/bac"
+        app:itemTextColor="@color/darkgray"
+        app:itemIconTint="@color/darkgray"
+        app:menu="@menu/drawemenu"
+        android:layout_gravity="start"
+        >
+
+    </android.support.design.widget.NavigationView>
+</android.support.v4.widget.DrawerLayout>
