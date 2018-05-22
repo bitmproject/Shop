@@ -20,7 +20,9 @@
         </activity>
         <activity android:name=".login" />
         <activity android:name=".product_details" />
-        <activity android:name=".signUp"></activity>
+        <activity android:name=".signUp" />
+        <activity android:name=".Admin_Login" />
+        <activity android:name=".Admin_Deshboard"></activity>
     </application>
 
 </manifest>

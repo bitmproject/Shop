@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar=findViewById(R.id.mytoolbar);
 
 
-
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(0xFFFFFFFF);
         toolbar.setTitle("Home");
@@ -165,6 +164,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else if(id == R.id.signout){
             Intent intent=new Intent(MainActivity.this,login.class);
+            startActivity(intent);
+        }
+        else if(id == R.id.admin){
+            Intent intent=new Intent(MainActivity.this,Admin_Login.class);
             startActivity(intent);
         }
         return false;
