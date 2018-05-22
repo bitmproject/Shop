@@ -1,5 +1,6 @@
 package com.example.aunshon.shop;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,5 +28,10 @@ public class login extends AppCompatActivity {
         r2=findViewById(R.id.rela_2);
 
         handler.postDelayed(runnable,400);
+    }
+
+    public void signup_btnClicked(View view) {
+        Intent intent=new Intent(login.this,signUp.class);
+        startActivity(intent);
     }
 }

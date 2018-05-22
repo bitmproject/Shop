@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
     android:background="@drawable/header_bg"
-    tools:context=".login">
+    tools:context=".signUp">
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,26 +14,17 @@
         android:layout_marginRight="40dp"
         android:layout_marginLeft="40dp"
         >
-        <ImageView
-            android:id="@+id/twitter"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/bag"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            />
         <RelativeLayout
             android:id="@+id/rela_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/twitter"
-            android:visibility="gone"
             >
             <TextView
                 android:id="@+id/loign"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sign In"
+                android:text="SignUp"
                 android:fontFamily="sans-serif-smallcaps"
                 android:layout_marginTop="20dp"
                 android:textSize="30dp"
@@ -50,19 +41,11 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Username"
-                        android:textSize="15dp"
-                        android:textColor="@color/white"
-                        android:textAllCaps="true"
-                        android:fontFamily="sans-serif-condensed"
-                        />
+
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:background="@drawable/et_bg"
+                        android:background="@drawable/etsignup"
                         android:fontFamily="sans-serif"
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
@@ -70,21 +53,47 @@
                         android:textSize="15dp"
                         android:layout_marginTop="5dp"
                         android:drawableLeft="@drawable/logperson"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="password"
-                        android:textSize="15dp"
-                        android:paddingTop="20dp"
-                        android:textColor="@color/white"
-                        android:textAllCaps="true"
-                        android:fontFamily="sans-serif-condensed"
+                        android:hint="Username"
+                        android:textColorHint="@color/white"
+                        android:layout_marginBottom="10dp"
                         />
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:background="@drawable/et_bg"
+                        android:background="@drawable/etsignup"
+                        android:fontFamily="sans-serif"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:textColor="@color/white"
+                        android:textSize="15dp"
+                        android:layout_marginTop="5dp"
+                        android:drawableLeft="@drawable/ic_email_black_24dp"
+                        android:hint="Email"
+                        android:textColorHint="@color/white"
+                        android:inputType="textEmailAddress"
+                        android:layout_marginBottom="10dp"
+                        />
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/etsignup"
+                        android:fontFamily="sans-serif"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:textColor="@color/white"
+                        android:textSize="15dp"
+                        android:layout_marginTop="5dp"
+                        android:drawableLeft="@drawable/ic_local_phone_black_24dp"
+                        android:hint="Phone"
+                        android:textColorHint="@color/white"
+                        android:inputType="phone"
+                        android:layout_marginBottom="10dp"
+                        />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/etsignup"
                         android:fontFamily="sans-serif"
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
@@ -92,6 +101,9 @@
                         android:textSize="15dp"
                         android:layout_marginTop="5dp"
                         android:drawableLeft="@drawable/lock"
+                        android:hint="Password"
+                        android:textColorHint="@color/white"
+                        android:inputType="textVisiblePassword"
                         />
                 </LinearLayout>
             </LinearLayout>
@@ -101,7 +113,7 @@
                 android:layout_height="40dp"
                 android:layout_below="@+id/linlay_1"
                 android:layout_marginTop="50dp"
-                android:text="Signin"
+                android:text="Signup"
                 android:background="@drawable/btn_bg"
                 android:fontFamily="sans-serif"
                 android:paddingLeft="70dp"
@@ -113,32 +125,6 @@
         </RelativeLayout>
 
     </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/rela_2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        >
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Signup Now?"
-            android:onClick="signup_btnClicked"
-            android:background="@color/transparent"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:textColor="@color/white"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="forgot Password ?"
-            android:layout_alignParentRight="true"
-            android:background="@color/transparent"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:textColor="@color/white"
-            />
-    </RelativeLayout>
+
+
 </RelativeLayout>
