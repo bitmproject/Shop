@@ -53,13 +53,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Username"
+                        android:text="Email id"
                         android:textSize="15dp"
                         android:textColor="@color/white"
                         android:textAllCaps="true"
                         android:fontFamily="sans-serif-condensed"
                         />
                     <EditText
+                        android:id="@+id/usernameedt"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:background="@drawable/et_bg"
@@ -82,6 +83,8 @@
                         android:fontFamily="sans-serif-condensed"
                         />
                     <EditText
+                        android:id="@+id/userpass"
+                        android:inputType="textPassword"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:background="@drawable/et_bg"
@@ -97,6 +100,8 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/usersignin"
+                android:onClick="signin"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_below="@+id/linlay_1"
@@ -121,16 +126,18 @@
         android:visibility="gone"
         >
         <Button
+            android:id="@+id/userreg"
+            android:onClick="registrationcompletion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Signup Now?"
-            android:onClick="signup_btnClicked"
             android:background="@color/transparent"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:textColor="@color/white"
             />
         <Button
+            android:id="@+id/userforgotpass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="forgot Password ?"

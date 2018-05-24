@@ -43,6 +43,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
+                        android:id="@+id/usernamesign"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:background="@drawable/etsignup"
@@ -58,6 +59,7 @@
                         android:layout_marginBottom="10dp"
                         />
                     <EditText
+                        android:id="@+id/useremail"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:background="@drawable/etsignup"
@@ -74,6 +76,7 @@
                         android:layout_marginBottom="10dp"
                         />
                     <EditText
+                        android:id="@+id/userphone"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:background="@drawable/etsignup"
@@ -91,6 +94,7 @@
                         />
 
                     <EditText
+                        android:id="@+id/userpass"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:background="@drawable/etsignup"
@@ -109,6 +113,8 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/userregister"
+                android:onClick="signup"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_below="@+id/linlay_1"
