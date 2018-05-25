@@ -36,7 +36,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull MyviewHolder holder, final int position) {
         holder.tv_product_title.setText(mdata.get(position).getProductTitle());
-        //holder.product_tumbnil.setImageResource(mdata.get(position).getThumbnil());
+        holder.product_tumbnil.setImageResource(mdata.get(position).getThumbnil());
         holder.tv_price.setText(mdata.get(position).getProductPrice().toString());
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {

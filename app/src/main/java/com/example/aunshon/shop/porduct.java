@@ -3,25 +3,13 @@ package com.example.aunshon.shop;
 public class porduct {
     private String productTitle;
     private String productCatagory;
-    private String productPrice;
-    private String thumbnil;
+    private Double productPrice;
+    private int thumbnil;
 
     public porduct() {
     }
 
-    public porduct(String productTitle, String productCatagory, String productPrice, String thumbnil) {
-        if(productTitle.trim().equals("")){
-            productTitle="No Title";
-        }
-        if(productCatagory.trim().equals("")){
-            productCatagory="No Title";
-        }
-        if(productPrice.equals("")){
-            productPrice="0.0";
-        }
-        if(thumbnil.trim().equals("")){
-            thumbnil="No Title";
-        }
+    public porduct(String productTitle, String productCatagory, Double productPrice, int thumbnil) {
         this.productTitle = productTitle;
         this.productCatagory = productCatagory;
         this.productPrice = productPrice;
@@ -36,27 +24,11 @@ public class porduct {
         return productCatagory;
     }
 
-    public String getProductPrice() {
+    public Double getProductPrice() {
         return productPrice;
     }
 
-    public String getThumbnil() {
+    public int getThumbnil() {
         return thumbnil;
-    }
-
-    public void setProductTitle(String productTitle) {
-        this.productTitle = productTitle;
-    }
-
-    public void setProductCatagory(String productCatagory) {
-        this.productCatagory = productCatagory;
-    }
-
-    public void setProductPrice(String productPrice) {
-        this.productPrice = productPrice;
-    }
-
-    public void setThumbnil(String thumbnil) {
-        this.thumbnil = thumbnil;
     }
 }

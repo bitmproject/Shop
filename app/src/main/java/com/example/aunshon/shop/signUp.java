@@ -44,7 +44,7 @@ public class signUp extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (name.getText().length()<2){
-                    name.setHint("Enter Your Name");
+                    name.setText("Enter valid email address");
                     a="1";
                 }
 
@@ -54,7 +54,7 @@ public class signUp extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (email.getText().length()<2){
-                    email.setHint("Enter valid mail");
+                    email.setText("Enter name");
                     b="1";
                 }
 
@@ -64,7 +64,7 @@ public class signUp extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (ppassword.getText().length()<2){
-                    ppassword.setHint("Enter password");
+                    ppassword.setText("Enter password");
                     c="1";
                 }
 
@@ -74,7 +74,7 @@ public class signUp extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (phone.getText().length()<11&&phone.getText().length()>12){
-                    phone.setHint("Enter valid phone number");
+                    phone.setText("Enter valid phone number");
 
                     d="1";
                 }
@@ -86,13 +86,13 @@ public class signUp extends AppCompatActivity {
 
     public void signup(View view) {
 
-        final String usernemail=email.getText().toString().trim();
+        String usernemail=email.getText().toString().trim();
         String password=ppassword.getText().toString().trim();
         final String userna=name.getText().toString().trim();
         final String userphone=phone.getText().toString().trim();
 
 
-  //if (a.equals("")&&b.equals("")&&b.equals("")&&d.equals("")) {
+  if (a.equals("")&&b.equals("")&&b.equals("")&&d.equals("")) {
 
       mAuth.createUserWithEmailAndPassword(usernemail,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
           @Override
@@ -105,10 +105,9 @@ public class signUp extends AppCompatActivity {
 
                   String device_token= FirebaseInstanceId.getInstance().getToken();
                   // complex data storing
-                  HashMap<String, String > usermap=new HashMap<>();
+                  HashMap<String, String> usermap=new HashMap<>();
                   usermap.put("name",userna);
                   usermap.put("phone",userphone);
-                  usermap.put("email",usernemail);
                   usermap.put("device_token",device_token);
 
 
@@ -135,8 +134,8 @@ public class signUp extends AppCompatActivity {
               }
           }
       });
-  //}else{
-      //Toast.makeText(this, "please validate all from", Toast.LENGTH_SHORT).show();
-  //}
+  }else{
+      Toast.makeText(this, "please validate all from", Toast.LENGTH_SHORT).show();
+  }
     }
 }

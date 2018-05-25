@@ -3,9 +3,7 @@ package com.example.aunshon.shop;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -36,7 +34,6 @@ public class Admin_Deshboard extends AppCompatActivity implements NavigationView
     RecyclerViewAdapter myadapter,newAdapter;
     ImageButton imageButton;
     NavigationView navigationView;
-    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +62,6 @@ public class Admin_Deshboard extends AppCompatActivity implements NavigationView
         myadapter=new RecyclerViewAdapter(this,tempProduct);
         recyclerView.setLayoutManager(new GridLayoutManager(this,3));
         recyclerView.setAdapter(myadapter);*/
-
-        fab = findViewById(R.id.fab);
-
     }
 
     @Override
@@ -156,14 +150,5 @@ public class Admin_Deshboard extends AppCompatActivity implements NavigationView
             }
         }
         return filteredArrayList;
-    }
-
-    public void fabClicked(View view) {
-        Intent intent=new Intent(Admin_Deshboard.this,addProductActivity.class);
-        startActivity(intent);
-    }
-
-    public void chooseImageBtnClicked(View view) {
-
     }
 }
