@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/addProdictActivityId"
+    tools:context=".addProductActivity">
+    <FrameLayout
+        android:id="@+id/toolbar_relative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <RelativeLayout
+            android:id="@+id/relaTool"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/mytoolbar_product"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/header_bg"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="?attr/windowNoTitle" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/mytoolbar_product"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="20dp"
+                android:paddingRight="10dp"
+                >
+                <LinearLayout
+                    android:id="@+id/lin1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+                    <Button
+                        android:id="@+id/chooseImageBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Choose Image"
+                        android:textSize="10dp"
+                        android:textStyle="bold"
+                        android:onClick="chooseImageBtnClicked"
+                        />
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Title"
+                        android:gravity="center"
+                        android:id="@+id/addtitleEt"
+                        />
+
+                </LinearLayout>
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/addCatagorySpinner"
+                    android:layout_below="@+id/lin1"
+                    android:gravity="center"
+                    android:foregroundGravity="center"
+                    >
+                </Spinner>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Price"
+                    android:gravity="center"
+                    android:id="@+id/addPriceEt"
+                    android:layout_below="@+id/addCatagorySpinner"
+                    />
+                <ImageView
+                    android:id="@+id/addImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/addPriceEt"
+                    android:layout_above="@+id/addprogressbar"
+                    tools:ignore="UnknownId" />
+                <android.support.v4.widget.ContentLoadingProgressBar
+                    android:id="@+id/addprogressbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/uploadBtn"
+                    style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+                    />
+                <Button
+                    android:id="@+id/uploadBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="upload"
+                    android:onClick="uploadBtnClicked"
+                    android:layout_alignParentBottom="true"
+                    />
+                <Button
+                    android:id="@+id/deshboardBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Deshboard"
+                    android:onClick="deshboardBtnClicked"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    />
+            </RelativeLayout>
+
+
+
+        </RelativeLayout>
+
+    </FrameLayout>
+</android.support.v4.widget.DrawerLayout>

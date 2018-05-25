@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tempProduct=new ArrayList<>();
-        tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
+        /*tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
         tempProduct.add(new porduct("shirt","shirt", (double) 500,R.drawable.images));
         tempProduct.add(new porduct("pant","pant", (double) 1500,R.drawable.images));
         tempProduct.add(new porduct("nokia","phone", (double) 11500,R.drawable.images));
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
         tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
         tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
-        tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
+        tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));*/
 
         recyclerView=findViewById(R.id.recyclerview);
         myadapter=new RecyclerViewAdapter(this,tempProduct);
