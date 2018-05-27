@@ -39,7 +39,7 @@ public class product_details extends AppCompatActivity implements NavigationView
 
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(0xFFFFFFFF);
-        toolbar.setTitle("Home");
+        getSupportActionBar().setTitle("Product Details");
 
         actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);

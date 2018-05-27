@@ -16,7 +16,19 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.regex.Pattern;
+
 public class login extends AppCompatActivity {
+    private static final Pattern p=
+            Pattern.compile("^" +
+                    //"(?=.*[0-9])" +         //at least 1 digit
+                    //"(?=.*[a-z])" +         //at least 1 lower case letter
+                    //"(?=.*[A-Z])" +         //at least 1 upper case letter
+                    //"(?=.*[a-zA-Z])" +      //any letter
+                    "(?=.*[@#$%^&+=])" +    //at least 1 special character
+                    "(?=\\S+$)" +           //no white spaces
+                    ".{1,}" +               //at least 1 characters
+                    "$");
     RelativeLayout r1,r2;
     private Button registration,forgotpass,userlogin;
     private EditText username,userpassword;
@@ -54,29 +66,37 @@ public class login extends AppCompatActivity {
 
 
     public void signin(View view) {
-        String usernemail=username.getText().toString().trim();
-        String password=userpassword.getText().toString().trim();
+        String usernemail = username.getText().toString().trim();
+        String password = userpassword.getText().toString().trim();
 
-        mAuth.signInWithEmailAndPassword(usernemail, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+        if (username.getText().toString().trim().isEmpty() || userpassword.getText().toString().trim().isEmpty()
+                || username.getText().toString().trim().equals(" ") || userpassword.getText().toString().trim().equals(" ")) {
+            username.setHint("Email ?");
+            username.setError("Fill it up");
+            userpassword.setHint("password ?");
+            userpassword.setError("Fill it up");
+        } else{
+
+            mAuth.signInWithEmailAndPassword(usernemail, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
 
 
-                            Toast.makeText(login.this, "sign in succesfull", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(login.this, MainActivity.class);
-                            startActivity(intent);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            String mess = task.getException().getMessage();
-                            Toast.makeText(login.this, mess, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(login.this, "sign in succesfull", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(login.this, MainActivity.class);
+                                startActivity(intent);
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                String mess = task.getException().getMessage();
+                                Toast.makeText(login.this, mess, Toast.LENGTH_SHORT).show();
+                            }
+
                         }
-
-                    }
-                });
-
+                    });
+            }
     }
 
     public void registrationcompletion(View view) {

@@ -3,13 +3,13 @@ package com.example.aunshon.shop;
 public class porduct {
     private String productTitle;
     private String productCatagory;
-    private Double productPrice;
-    private int thumbnil;
+    private String productPrice;
+    private String thumbnil;
 
     public porduct() {
     }
 
-    public porduct(String productTitle, String productCatagory, Double productPrice, int thumbnil) {
+    public porduct(String productTitle, String productCatagory, String productPrice, String thumbnil) {
         this.productTitle = productTitle;
         this.productCatagory = productCatagory;
         this.productPrice = productPrice;
@@ -24,11 +24,11 @@ public class porduct {
         return productCatagory;
     }
 
-    public Double getProductPrice() {
+    public String getProductPrice() {
         return productPrice;
     }
 
-    public int getThumbnil() {
+    public String getThumbnil() {
         return thumbnil;
     }
 }

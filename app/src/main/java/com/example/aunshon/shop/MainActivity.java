@@ -45,12 +45,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        CheckInternetConnection checkInternetConnection =new CheckInternetConnection();
+
+        if(!checkInternetConnection.isConnected(MainActivity.this)){
+            checkInternetConnection.buildDialog(MainActivity.this).show();
+        }
+
         toolbar=findViewById(R.id.mytoolbar);
 
 
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(0xFFFFFFFF);
-        toolbar.setTitle("Home");
+        getSupportActionBar().setTitle("Home");
         drawerLayout=findViewById(R.id.main);
         imageButton=findViewById(R.id.cartimage);
         navigationView=findViewById(R.id.navigationView);
@@ -62,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tempProduct=new ArrayList<>();
-        tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
+        /*tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
         tempProduct.add(new porduct("shirt","shirt", (double) 500,R.drawable.images));
         tempProduct.add(new porduct("pant","pant", (double) 1500,R.drawable.images));
         tempProduct.add(new porduct("nokia","phone", (double) 11500,R.drawable.images));
@@ -76,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
         tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
         tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
-        tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
+        tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));*/
 
         recyclerView=findViewById(R.id.recyclerview);
         myadapter=new RecyclerViewAdapter(this,tempProduct);

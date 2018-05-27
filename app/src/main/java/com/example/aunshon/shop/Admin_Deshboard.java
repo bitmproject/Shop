@@ -54,6 +54,7 @@ public class Admin_Deshboard extends AppCompatActivity implements NavigationView
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Admin Deshboard");
 
         /*tempProduct=new ArrayList<>();
         tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
@@ -150,5 +151,10 @@ public class Admin_Deshboard extends AppCompatActivity implements NavigationView
             }
         }
         return filteredArrayList;
+    }
+
+    public void fabClicked(View view) {
+        Intent intent=new Intent(Admin_Deshboard.this,addProductActivity.class);
+        startActivity(intent);
     }
 }

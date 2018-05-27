@@ -2,4 +2,11 @@
     <string name="app_name">Shop</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string-array name="catagory">
+        <item>No seleted catagory</item>
+        <item>Pant</item>
+        <item>Shirt</item>
+        <item>Phone</item>
+        <item>Laptop</item>
+    </string-array>
 </resources>
