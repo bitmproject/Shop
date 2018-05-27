@@ -19,6 +19,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +35,15 @@ public class Admin_Deshboard extends AppCompatActivity implements NavigationView
     Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    List<porduct> tempProduct;
-    RecyclerView recyclerView;
+
     SearchView searchView;
-    RecyclerViewAdapter myadapter,newAdapter;
     ImageButton imageButton;
     NavigationView navigationView;
+
+    List<porduct> tempProduct;
+    RecyclerView recyclerview;
+    RecyclerViewAdapter myadapter,newAdapter;
+    DatabaseReference mdatabaseref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +66,28 @@ public class Admin_Deshboard extends AppCompatActivity implements NavigationView
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Admin Deshboard");
 
-        /*tempProduct=new ArrayList<>();
-        tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
+        tempProduct=new ArrayList<>();
+        recyclerview=findViewById(R.id.recyclerviewadmin);
+        recyclerview.setHasFixedSize(true);
 
-        recyclerView=findViewById(R.id.recyclerview);
-        myadapter=new RecyclerViewAdapter(this,tempProduct);
-        recyclerView.setLayoutManager(new GridLayoutManager(this,3));
-        recyclerView.setAdapter(myadapter);*/
+        mdatabaseref= FirebaseDatabase.getInstance().getReference("uploads");
+        mdatabaseref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot postSnapshot:dataSnapshot.getChildren()){
+                    porduct pro=postSnapshot.getValue(porduct.class);
+                    tempProduct.add(pro);
+                }
+                myadapter=new RecyclerViewAdapter(Admin_Deshboard.this,tempProduct);
+                recyclerview.setLayoutManager(new GridLayoutManager(Admin_Deshboard.this,3));
+                recyclerview.setAdapter(myadapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(Admin_Deshboard.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -112,8 +137,8 @@ public class Admin_Deshboard extends AppCompatActivity implements NavigationView
             public boolean onQueryTextChange(String newText) {
                 final  List<porduct> filtermodelist=filtered(tempProduct,newText);
                 newAdapter=new RecyclerViewAdapter(Admin_Deshboard.this,filtermodelist);
-                recyclerView.setLayoutManager(new GridLayoutManager(Admin_Deshboard.this,3));
-                recyclerView.setAdapter(newAdapter);
+                recyclerview.setLayoutManager(new GridLayoutManager(Admin_Deshboard.this,3));
+                recyclerview.setAdapter(newAdapter);
                 return true;
             }
         });

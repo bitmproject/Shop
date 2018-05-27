@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 public class product_details extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private DrawerLayout drawerLayout;
@@ -49,13 +51,16 @@ public class product_details extends AppCompatActivity implements NavigationView
         Intent intent=getIntent();
         String title1=intent.getExtras().getString("title");
         String catagory1=intent.getExtras().getString("catagory");
-        Double price1=intent.getExtras().getDouble("price");
-        int image1=intent.getExtras().getInt("image");
+        String price1=intent.getExtras().getString("price");
+        String image1=intent.getExtras().getString("image");
 
         Title.setText(title1);
         Catagory.setText(catagory1);
         Price.setText(price1.toString());
-        imageView.setImageResource(image1);
+        Picasso.with(product_details.this)
+                .load(image1)
+                .fit()
+                .into(imageView);
 
     }
 

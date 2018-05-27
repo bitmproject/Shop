@@ -24,6 +24,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,10 +39,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
+
     List<porduct> tempProduct;
     RecyclerView recyclerView;
-    SearchView searchView;
     RecyclerViewAdapter myadapter,newAdapter;
+    DatabaseReference mdatabaseref;
+
+    SearchView searchView;
     ImageButton imageButton;
     NavigationView navigationView;
 
@@ -69,26 +78,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tempProduct=new ArrayList<>();
-        /*tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
-        tempProduct.add(new porduct("shirt","shirt", (double) 500,R.drawable.images));
-        tempProduct.add(new porduct("pant","pant", (double) 1500,R.drawable.images));
-        tempProduct.add(new porduct("nokia","phone", (double) 11500,R.drawable.images));
-        tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
-        tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
-        tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
-        tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
-        tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
-        tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
-        tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
-        tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
-        tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
-        tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));
-        tempProduct.add(new porduct("bata","show", (double) 1500,R.drawable.images));*/
-
         recyclerView=findViewById(R.id.recyclerview);
-        myadapter=new RecyclerViewAdapter(this,tempProduct);
+        recyclerView.setHasFixedSize(true);
+
+        mdatabaseref= FirebaseDatabase.getInstance().getReference("uploads");
+        mdatabaseref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot postSnapshot:dataSnapshot.getChildren()){
+                    porduct pro=postSnapshot.getValue(porduct.class);
+                    tempProduct.add(pro);
+                }
+                myadapter=new RecyclerViewAdapter(MainActivity.this,tempProduct);
+                recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this,3));
+                recyclerView.setAdapter(myadapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+       /* myadapter=new RecyclerViewAdapter(this,tempProduct);
         recyclerView.setLayoutManager(new GridLayoutManager(this,3));
-        recyclerView.setAdapter(myadapter);
+        recyclerView.setAdapter(myadapter);*/
 
     }
 

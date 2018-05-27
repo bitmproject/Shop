@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyviewHolder> {
@@ -27,15 +29,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public MyviewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view;
-        LayoutInflater inflater=LayoutInflater.from(mcontext);
-        view=inflater.inflate(R.layout.cardview_item,parent,false);
+        View view=LayoutInflater.from(mcontext).inflate(R.layout.cardview_item,parent,false);
         return new MyviewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyviewHolder holder, final int position) {
+
         holder.tv_product_title.setText(mdata.get(position).getProductTitle());
+        Picasso.with(mcontext)
+                .load(mdata.get(position).getThumbnil())
+                .fit()
+                .into(holder.product_tumbnil);
         //holder.product_tumbnil.setImageResource(mdata.get(position).getThumbnil());
         holder.tv_price.setText(mdata.get(position).getProductPrice().toString());
 
