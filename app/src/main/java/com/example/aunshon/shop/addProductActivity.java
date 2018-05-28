@@ -94,7 +94,7 @@ public class addProductActivity extends AppCompatActivity {
             if(spinner.getSelectedItem().toString().equals("No seleted catagory")){
                 Toast.makeText(this, "Select a catagory", Toast.LENGTH_SHORT).show();
             }
-            if(imageView.getResources().equals(0)){
+            if(imageView.getResources().toString().isEmpty()){
                 Toast.makeText(this, "Please choose an image", Toast.LENGTH_SHORT).show();
             }
         }else {
@@ -160,6 +160,7 @@ public class addProductActivity extends AppCompatActivity {
 
                             spinner.setSelection(0);
                             imageView.setImageResource(0);
+                            imageView.setImageURI(null);
                         }
                     },500);
                     Toast.makeText(addProductActivity.this, "Upload Successfull", Toast.LENGTH_SHORT).show();

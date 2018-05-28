@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -18,19 +19,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Admin_Deshboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class Admin_Deshboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,AdminRecyclerviewAdapter.OnItemClickListener{
 
     Toolbar toolbar;
     private DrawerLayout drawerLayout;
@@ -42,8 +48,13 @@ public class Admin_Deshboard extends AppCompatActivity implements NavigationView
 
     List<porduct> tempProduct;
     RecyclerView recyclerview;
-    RecyclerViewAdapter myadapter,newAdapter;
+    AdminRecyclerviewAdapter myadapter,newAdapter;
     DatabaseReference mdatabaseref;
+    ValueEventListener mDbListener;
+    CardView cardView;
+
+    ProgressBar mporgressbar;
+    private FirebaseStorage mstorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +70,8 @@ public class Admin_Deshboard extends AppCompatActivity implements NavigationView
         imageButton=findViewById(R.id.cartimage);
         navigationView=findViewById(R.id.navigationViewadmin);
         navigationView.setNavigationItemSelectedListener(this);
+        mporgressbar=findViewById(R.id.progerssBaradmin);
+        cardView=findViewById(R.id.cardView_id);
 
         actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -70,22 +83,30 @@ public class Admin_Deshboard extends AppCompatActivity implements NavigationView
         recyclerview=findViewById(R.id.recyclerviewadmin);
         recyclerview.setHasFixedSize(true);
 
+        myadapter=new AdminRecyclerviewAdapter(Admin_Deshboard.this,tempProduct);
+        recyclerview.setLayoutManager(new GridLayoutManager(Admin_Deshboard.this,3));
+        recyclerview.setAdapter(myadapter);
+        myadapter.setOnItemClickListener(Admin_Deshboard.this);
+        mstorage= FirebaseStorage.getInstance();
+
         mdatabaseref= FirebaseDatabase.getInstance().getReference("uploads");
-        mdatabaseref.addValueEventListener(new ValueEventListener() {
+        mDbListener=mdatabaseref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                tempProduct.clear();
                 for(DataSnapshot postSnapshot:dataSnapshot.getChildren()){
                     porduct pro=postSnapshot.getValue(porduct.class);
+                    pro.setMkey(postSnapshot.getKey());
                     tempProduct.add(pro);
                 }
-                myadapter=new RecyclerViewAdapter(Admin_Deshboard.this,tempProduct);
-                recyclerview.setLayoutManager(new GridLayoutManager(Admin_Deshboard.this,3));
-                recyclerview.setAdapter(myadapter);
+                myadapter.notifyDataSetChanged();
+                mporgressbar.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(Admin_Deshboard.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                mporgressbar.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -136,7 +157,7 @@ public class Admin_Deshboard extends AppCompatActivity implements NavigationView
             @Override
             public boolean onQueryTextChange(String newText) {
                 final  List<porduct> filtermodelist=filtered(tempProduct,newText);
-                newAdapter=new RecyclerViewAdapter(Admin_Deshboard.this,filtermodelist);
+                newAdapter=new AdminRecyclerviewAdapter(Admin_Deshboard.this,filtermodelist);
                 recyclerview.setLayoutManager(new GridLayoutManager(Admin_Deshboard.this,3));
                 recyclerview.setAdapter(newAdapter);
                 return true;
@@ -181,5 +202,26 @@ public class Admin_Deshboard extends AppCompatActivity implements NavigationView
     public void fabClicked(View view) {
         Intent intent=new Intent(Admin_Deshboard.this,addProductActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mdatabaseref.removeEventListener(mDbListener);
+    }
+
+    @Override
+    public void onDeleteClick(int position) {
+        porduct selectedItem = tempProduct.get(position);
+        final String selectedKey = selectedItem.getMkey();
+
+        StorageReference imageRef = mstorage.getReferenceFromUrl(selectedItem.getThumbnil());
+        imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                mdatabaseref.child(selectedKey).removeValue();
+                Toast.makeText(Admin_Deshboard.this, "Item deleted", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

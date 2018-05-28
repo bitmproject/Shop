@@ -28,7 +28,6 @@
         android:orientation="horizontal"
         android:gravity="center"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
         >
         <LinearLayout
             android:layout_width="86dp"
@@ -45,9 +44,11 @@
                 />
             <TextView
                 android:id="@+id/price"
+                android:drawableLeft="@drawable/takaicon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$price"
+
                 />
         </LinearLayout>
 

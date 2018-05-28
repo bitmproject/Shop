@@ -21,14 +21,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,10 +48,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     RecyclerView recyclerView;
     RecyclerViewAdapter myadapter,newAdapter;
     DatabaseReference mdatabaseref;
+    private FirebaseStorage mstorage;
 
     SearchView searchView;
     ImageButton imageButton;
     NavigationView navigationView;
+    ProgressBar mprogressBar;
+    FirebaseUser firebaseUser;
+    FirebaseAuth firebaseAuth;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -71,6 +79,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         imageButton=findViewById(R.id.cartimage);
         navigationView=findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
+        mprogressBar=findViewById(R.id.progerssBarMain);
+        firebaseAuth=FirebaseAuth.getInstance();
+        firebaseUser=firebaseAuth.getCurrentUser();
 
         actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -81,22 +92,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recyclerView=findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
 
+        myadapter=new RecyclerViewAdapter(MainActivity.this,tempProduct);
+        recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this,3));
+        recyclerView.setAdapter(myadapter);
+        mstorage=FirebaseStorage.getInstance();
+
         mdatabaseref= FirebaseDatabase.getInstance().getReference("uploads");
         mdatabaseref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
+                tempProduct.clear();
                 for(DataSnapshot postSnapshot:dataSnapshot.getChildren()){
                     porduct pro=postSnapshot.getValue(porduct.class);
+                    pro.setMkey(dataSnapshot.getKey());
                     tempProduct.add(pro);
                 }
-                myadapter=new RecyclerViewAdapter(MainActivity.this,tempProduct);
-                recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this,3));
-                recyclerView.setAdapter(myadapter);
+                myadapter.notifyDataSetChanged();
+                mprogressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                mprogressBar.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -183,12 +202,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         }
         else if(id == R.id.signout){
-            Intent intent=new Intent(MainActivity.this,login.class);
-            startActivity(intent);
+            if(firebaseUser!=null){
+                firebaseAuth.signOut();
+                Toast.makeText(this, "Signed Out", Toast.LENGTH_SHORT).show();
+                finish();
+                Intent mainint=new Intent(MainActivity.this,MainActivity.class);
+                mainint.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(mainint);
+
+            }else {
+                Intent intent = new Intent(MainActivity.this, login.class);
+                startActivity(intent);
+            }
         }
         else if(id == R.id.admin){
-            Intent intent=new Intent(MainActivity.this,Admin_Login.class);
-            startActivity(intent);
+            if(firebaseUser!=null){
+                Intent intent=new Intent(MainActivity.this,Admin_Deshboard.class);
+                startActivity(intent);
+            }else {
+                Intent intent = new Intent(MainActivity.this, Admin_Login.class);
+                startActivity(intent);
+            }
         }
         return false;
     }

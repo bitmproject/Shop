@@ -39,6 +39,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.tv_product_title.setText(mdata.get(position).getProductTitle());
         Picasso.with(mcontext)
                 .load(mdata.get(position).getThumbnil())
+                .placeholder(R.mipmap.ic_launcher)
                 .fit()
                 .into(holder.product_tumbnil);
         //holder.product_tumbnil.setImageResource(mdata.get(position).getThumbnil());

@@ -15,23 +15,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.regex.Pattern;
 
 public class login extends AppCompatActivity {
-    private static final Pattern p=
-            Pattern.compile("^" +
-                    //"(?=.*[0-9])" +         //at least 1 digit
-                    //"(?=.*[a-z])" +         //at least 1 lower case letter
-                    //"(?=.*[A-Z])" +         //at least 1 upper case letter
-                    //"(?=.*[a-zA-Z])" +      //any letter
-                    "(?=.*[@#$%^&+=])" +    //at least 1 special character
-                    "(?=\\S+$)" +           //no white spaces
-                    ".{1,}" +               //at least 1 characters
-                    "$");
     RelativeLayout r1,r2;
     private Button registration,forgotpass,userlogin;
     private EditText username,userpassword;
+    FirebaseUser firebaseUser;
+    FirebaseAuth firebaseAuth;
 
     private FirebaseAuth mAuth;
     Handler handler=new Handler();
@@ -54,6 +47,8 @@ public class login extends AppCompatActivity {
         registration=findViewById(R.id.userreg);
         forgotpass=findViewById(R.id.userforgotpass);
         userlogin=findViewById(R.id.usersignin);
+        firebaseAuth=FirebaseAuth.getInstance();
+        firebaseUser=firebaseAuth.getCurrentUser();
 
         mAuth=FirebaseAuth.getInstance();
 
@@ -86,8 +81,10 @@ public class login extends AppCompatActivity {
 
 
                                 Toast.makeText(login.this, "sign in succesfull", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(login.this, MainActivity.class);
-                                startActivity(intent);
+                                finish();
+                                Intent mainint=new Intent(login.this,MainActivity.class);
+                                mainint.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(mainint);
                             } else {
                                 // If sign in fails, display a message to the user.
                                 String mess = task.getException().getMessage();
