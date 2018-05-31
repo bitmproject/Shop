@@ -143,8 +143,10 @@ public class signUp extends AppCompatActivity {
                       usermap.put("phone",userphone);
                       usermap.put("device_token",device_token);
 
+                      UserInfoClass userInfoClass=new UserInfoClass(userna,usernemail,userphone,device_token);
 
-                      mDatabase.setValue(usermap).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                      mDatabase.setValue(userInfoClass).addOnCompleteListener(new OnCompleteListener<Void>() {
                           @Override
                           public void onComplete(@NonNull Task<Void> task) {
                               if (task.isSuccessful()){

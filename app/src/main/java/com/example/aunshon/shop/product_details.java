@@ -9,11 +9,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 
 public class product_details extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -23,7 +35,10 @@ public class product_details extends AppCompatActivity implements NavigationView
     NavigationView navigationView2;
     ImageView imageView;
     TextView Price,Catagory,Title;
-    Button addToCart;
+    Button addToCart ,favouriteBtn;
+    private DatabaseReference mDatabase;
+    String image1,price1,catagory1,title1,ftoken;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +52,9 @@ public class product_details extends AppCompatActivity implements NavigationView
         Title=findViewById(R.id.titleEt);
         Catagory=findViewById(R.id.catagoryEt);
         addToCart=findViewById(R.id.cartbtn);
+        favouriteBtn=findViewById(R.id.favouritebtn);
         navigationView2.setNavigationItemSelectedListener(this);
+        mAuth=FirebaseAuth.getInstance();
 
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(0xFFFFFFFF);
@@ -49,10 +66,10 @@ public class product_details extends AppCompatActivity implements NavigationView
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent=getIntent();
-        String title1=intent.getExtras().getString("title");
-        String catagory1=intent.getExtras().getString("catagory");
-        String price1=intent.getExtras().getString("price");
-        String image1=intent.getExtras().getString("image");
+        title1=intent.getExtras().getString("title");
+        catagory1=intent.getExtras().getString("catagory");
+        price1=intent.getExtras().getString("price");
+        image1=intent.getExtras().getString("image");
 
         Title.setText(title1);
         Catagory.setText(catagory1);
@@ -89,5 +106,41 @@ public class product_details extends AppCompatActivity implements NavigationView
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
+    }
+
+    public void favouriteBtnClicked(View view) {
+        FirebaseUser current_user=FirebaseAuth.getInstance().getCurrentUser();
+        String uid=current_user.getUid();
+
+        mDatabase= FirebaseDatabase.getInstance().getReference().child("Users").child(uid).child("favoutites").push();
+;
+        // complex data storing
+        HashMap<String, String> usermap=new HashMap<>();
+        usermap.put("title",title1);
+        usermap.put("price",price1);
+        usermap.put("catagory",catagory1);
+        usermap.put("imageurl",image1);
+        usermap.put("ftoken",uid);
+
+        FavouritePInfo favouritePInfo=new FavouritePInfo(title1,price1,catagory1,image1);
+
+        mDatabase.setValue(favouritePInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+
+                    /*FirebaseUser user = mAuth.getCurrentUser();
+                    Intent mainint=new Intent(signUp.this,MainActivity.class);
+                    mainint.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(mainint);*/
+
+                }
+            }
+        });
+
+        Toast.makeText(product_details.this, "Favourite added", Toast.LENGTH_SHORT).show();
+    }
+
+    public void cartBtnClicked(View view) {
     }
 }

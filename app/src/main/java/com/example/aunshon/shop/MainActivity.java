@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
-    List<porduct> tempProduct;
+    List<porduct> tempProduct,favouriteProduct;
     RecyclerView recyclerView;
-    RecyclerViewAdapter myadapter,newAdapter;
+    RecyclerViewAdapter myadapter,newAdapter,madapter;
     DatabaseReference mdatabaseref;
     private FirebaseStorage mstorage;
 
@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ProgressBar mprogressBar;
     FirebaseUser firebaseUser;
     FirebaseAuth firebaseAuth;
+    TextView phoneTv,emailTv;
+    String testEmail;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -82,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mprogressBar=findViewById(R.id.progerssBarMain);
         firebaseAuth=FirebaseAuth.getInstance();
         firebaseUser=firebaseAuth.getCurrentUser();
+        phoneTv=findViewById(R.id.phoneTv);
+        emailTv=findViewById(R.id.EmailTv);
 
         actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -224,6 +228,64 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intent);
             }
         }
+        else if(id == R.id.favourites){
+            favouriteProduct=new ArrayList<>();
+            recyclerView=findViewById(R.id.recyclerview);
+            recyclerView.setHasFixedSize(true);
+
+            madapter=new RecyclerViewAdapter(MainActivity.this,favouriteProduct);
+            recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this,3));
+            recyclerView.setAdapter(madapter);
+            mstorage=FirebaseStorage.getInstance();
+
+            mdatabaseref= FirebaseDatabase.getInstance().getReference("uploads");
+            mdatabaseref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    favouriteProduct.clear();
+                    for(DataSnapshot postSnapshot:dataSnapshot.getChildren()){
+                        porduct pro=postSnapshot.getValue(porduct.class);
+                        if(pro.getProductCatagory().equals("Shirt")){
+                            pro.setMkey(dataSnapshot.getKey());
+                            favouriteProduct.add(pro);
+                        }
+                    }
+                    madapter.notifyDataSetChanged();
+                    mprogressBar.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    mprogressBar.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
+        else if(id == R.id.userInfo){
+
+            mdatabaseref= FirebaseDatabase.getInstance().getReference("Users");
+            mdatabaseref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    for(DataSnapshot postSnapshot:dataSnapshot.getChildren()){
+                        UserInfoClass pro=postSnapshot.getValue(UserInfoClass.class);
+                        if (firebaseUser!=null){
+                            if(firebaseUser.getEmail().equals(pro.getEmail())){
+
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    mprogressBar.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
         return false;
     }
 
@@ -232,3 +294,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 }
+
+//below code for  catagory;
+/*
+
+favouriteProduct=new ArrayList<>();
+            recyclerView=findViewById(R.id.recyclerview);
+            recyclerView.setHasFixedSize(true);
+
+            madapter=new RecyclerViewAdapter(MainActivity.this,favouriteProduct);
+            recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this,3));
+            recyclerView.setAdapter(madapter);
+            mstorage=FirebaseStorage.getInstance();
+
+            mdatabaseref= FirebaseDatabase.getInstance().getReference("uploads");
+            mdatabaseref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    favouriteProduct.clear();
+                    for(DataSnapshot postSnapshot:dataSnapshot.getChildren()){
+                        porduct pro=postSnapshot.getValue(porduct.class);
+                        if(pro.getProductCatagory().equals("Shirt")){
+                            pro.setMkey(dataSnapshot.getKey());
+                            favouriteProduct.add(pro);
+                        }
+                    }
+                    madapter.notifyDataSetChanged();
+                    mprogressBar.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    mprogressBar.setVisibility(View.INVISIBLE);
+                }
+            });
+ */

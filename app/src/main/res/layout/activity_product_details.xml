@@ -121,7 +121,20 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:layout_marginTop="30dp"
+                            android:padding="10dp"
                             >
+                            <Button
+                                android:id="@+id/favouritebtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:text="Favourite"
+                                android:background="@drawable/btn_bg"
+                                android:fontFamily="sans-serif"
+                                android:layout_weight="1"
+                                android:textColor="@color/white"
+                                android:layout_marginRight="5dp"
+                                android:onClick="favouriteBtnClicked"
+                                />
                             <Button
                                 android:id="@+id/cartbtn"
                                 android:layout_width="wrap_content"
@@ -129,9 +142,10 @@
                                 android:text="add to cart"
                                 android:background="@drawable/btn_bg"
                                 android:fontFamily="sans-serif"
-                                android:paddingLeft="70dp"
-                                android:paddingRight="70dp"
                                 android:textColor="@color/white"
+                                android:layout_weight="1"
+                                android:layout_marginLeft="5dp"
+                                android:onClick="cartBtnClicked"
                                 />
                         </LinearLayout>
                     </LinearLayout>
