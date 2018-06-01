@@ -24,6 +24,8 @@
                 android:minHeight="?attr/actionBarSize"
                 android:theme="?attr/windowNoTitle" />
             <android.support.v7.widget.RecyclerView
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:id="@+id/recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

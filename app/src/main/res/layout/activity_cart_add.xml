@@ -4,16 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/admindesh"
-    tools:context=".Admin_Deshboard">
-
+    android:id="@+id/cartDeshboard"
+    tools:context=".CartAdd">
     <FrameLayout
-        android:id="@+id/toolbar_relative"
+        android:id="@+id/toolbar_cart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
         <android.support.v7.widget.Toolbar
-            android:id="@+id/mytoolbaradmin"
+            android:id="@+id/mytoolbarcart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -24,30 +23,34 @@
         <android.support.v7.widget.RecyclerView
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:id="@+id/recyclerviewadmin"
+            android:id="@+id/recyclerviewcart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="58dp"
             android:background="@color/bac"
             >
         </android.support.v7.widget.RecyclerView>
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:onClick="fabClicked"
+
+        <ProgressBar
+            android:id="@+id/progerssBarcart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="35dp"
-            app:srcCompat="@android:drawable/ic_input_add" />
-        <ProgressBar
-        android:id="@+id/progerssBaradmin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        />
+            android:layout_gravity="center"
+            />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:onClick="fabClickedcart"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom|center"
+            android:layout_marginBottom="10dp"
+            android:background="@color/white"
+            app:srcCompat="@drawable/index"
+            app:rippleColor="@color/white"
+            />
     </FrameLayout>
     <android.support.design.widget.NavigationView
-        android:id="@+id/navigationViewadmin"
+        android:id="@+id/navigationViewcart"
         app:headerLayout="@layout/header"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -59,4 +62,5 @@
         >
 
     </android.support.design.widget.NavigationView>
+
 </android.support.v4.widget.DrawerLayout>

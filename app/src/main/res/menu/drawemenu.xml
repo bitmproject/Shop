@@ -7,5 +7,4 @@
     <item android:id="@+id/favourites"  android:title="Favourites" android:icon="@drawable/favorite"/>
     <item android:id="@+id/admin"  android:title="Admin" android:icon="@drawable/person"/>
     <item android:id="@+id/signout"  android:title="SignOut" android:icon="@drawable/exit"/>
-    <item android:id="@+id/userInfo"  android:title="user" android:icon="@drawable/exit"/>
 </menu>

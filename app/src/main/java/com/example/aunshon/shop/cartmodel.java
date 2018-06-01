@@ -2,35 +2,24 @@ package com.example.aunshon.shop;
 
 import com.google.firebase.database.Exclude;
 
-public class porduct {
+public class cartmodel {
     private String productTitle;
     private String productCatagory;
     private String productPrice;
     private String thumbnil;
-    private String mkey;
-    int counter=00;
+    private String mkey,email;
 
-    public int getCounter() {
-        return counter;
+    public cartmodel() {
     }
 
-    public void setCounter(int counter) {
-        this.counter = counter;
-    }
 
-    public porduct(int counter) {
 
-        this.counter = counter;
-    }
-
-    public porduct() {
-    }
-
-    public porduct(String productTitle, String productCatagory, String productPrice, String thumbnil) {
+    public cartmodel(String productTitle, String productCatagory, String productPrice, String thumbnil, String email) {
         this.productTitle = productTitle;
         this.productCatagory = productCatagory;
         this.productPrice = productPrice;
         this.thumbnil = thumbnil;
+        this.email=email;
     }
 
     public String getProductTitle() {
@@ -56,5 +45,13 @@ public class porduct {
     @Exclude
     public void setMkey(String mkey) {
         this.mkey = mkey;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

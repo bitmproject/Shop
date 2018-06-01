@@ -2,9 +2,7 @@ package com.example.aunshon.shop;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.graphics.Color;
-import android.renderscript.ScriptGroup;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -44,11 +43,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
-    List<porduct> tempProduct,favouriteProduct;
+    List<porduct> tempProduct,tempProduct2;
+    List<FavouritePInfo> favouriteProduct;
     RecyclerView recyclerView;
-    RecyclerViewAdapter myadapter,newAdapter,madapter;
+    RecyclerViewAdapter myadapter,newAdapter;
+    FavouriteRecyclerAdapter madapter;
     DatabaseReference mdatabaseref;
     private FirebaseStorage mstorage;
+    ValueEventListener mDbListener;
+    MenuItem CartIconMEnuItem;
 
     SearchView searchView;
     ImageButton imageButton;
@@ -56,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ProgressBar mprogressBar;
     FirebaseUser firebaseUser;
     FirebaseAuth firebaseAuth;
-    TextView phoneTv,emailTv;
+    TextView phoneTv,emailTv,countTv,nameTv;
     String testEmail;
 
     @SuppressLint("WrongViewCast")
@@ -87,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         phoneTv=findViewById(R.id.phoneTv);
         emailTv=findViewById(R.id.EmailTv);
 
+
         actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
@@ -111,9 +115,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     porduct pro=postSnapshot.getValue(porduct.class);
                     pro.setMkey(dataSnapshot.getKey());
                     tempProduct.add(pro);
+                    /*countTv=findViewById(R.id.count_tv);
+                    counter c=new counter();
+                    String cc= String.valueOf(c.getCount());
+                    countTv.setText(cc);*/
                 }
                 myadapter.notifyDataSetChanged();
                 mprogressBar.setVisibility(View.INVISIBLE);
+                if(firebaseUser!= null){
+                    countm();
+                }
+
             }
 
             @Override
@@ -123,9 +135,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-       /* myadapter=new RecyclerViewAdapter(this,tempProduct);
-        recyclerView.setLayoutManager(new GridLayoutManager(this,3));
-        recyclerView.setAdapter(myadapter);*/
+    }
+
+    private void countm() {
+        if(firebaseUser!=null){
+            mdatabaseref = FirebaseDatabase.getInstance().getReference("recent_cart");
+            mDbListener = mdatabaseref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    countTv=findViewById(R.id.count_tv);
+                    counter c=new counter();
+                    int cc = c.getCount();
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        cartmodel pro= postSnapshot.getValue(cartmodel.class);
+                        if (firebaseUser.getEmail().equals(pro.getEmail())) {
+                            pro.setMkey(dataSnapshot.getKey());
+                            cc=c.setCount(c.getCount()+1);
+
+                        }
+                    }
+                    myadapter.notifyDataSetChanged();
+                    try{
+                        countTv.setText(String.valueOf(cc));
+                    }catch (Exception e){
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        else{
+            countTv=findViewById(R.id.count_tv);
+            countTv.setText("0");
+        }
 
     }
 
@@ -160,15 +207,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             }
         });
-
         return super.onCreateOptionsMenu(menu);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(actionBarDrawerToggle.onOptionsItemSelected(item)){
+            userdata();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -228,63 +274,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intent);
             }
         }
-        else if(id == R.id.favourites){
-            favouriteProduct=new ArrayList<>();
-            recyclerView=findViewById(R.id.recyclerview);
-            recyclerView.setHasFixedSize(true);
-
-            madapter=new RecyclerViewAdapter(MainActivity.this,favouriteProduct);
-            recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this,3));
-            recyclerView.setAdapter(madapter);
-            mstorage=FirebaseStorage.getInstance();
-
-            mdatabaseref= FirebaseDatabase.getInstance().getReference("uploads");
-            mdatabaseref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    favouriteProduct.clear();
-                    for(DataSnapshot postSnapshot:dataSnapshot.getChildren()){
-                        porduct pro=postSnapshot.getValue(porduct.class);
-                        if(pro.getProductCatagory().equals("Shirt")){
-                            pro.setMkey(dataSnapshot.getKey());
-                            favouriteProduct.add(pro);
-                        }
-                    }
-                    madapter.notifyDataSetChanged();
-                    mprogressBar.setVisibility(View.INVISIBLE);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                    mprogressBar.setVisibility(View.INVISIBLE);
-                }
-            });
+        else if(id == R.id.myorder){
+            if(firebaseUser!=null){
+                Intent intent=new Intent(MainActivity.this,AllOrders.class);
+                startActivity(intent);
+            }else {
+                Intent intent = new Intent(MainActivity.this, Admin_Login.class);
+                startActivity(intent);
+            }
         }
-        else if(id == R.id.userInfo){
-
-            mdatabaseref= FirebaseDatabase.getInstance().getReference("Users");
-            mdatabaseref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    for(DataSnapshot postSnapshot:dataSnapshot.getChildren()){
-                        UserInfoClass pro=postSnapshot.getValue(UserInfoClass.class);
-                        if (firebaseUser!=null){
-                            if(firebaseUser.getEmail().equals(pro.getEmail())){
-
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                    mprogressBar.setVisibility(View.INVISIBLE);
-                }
-            });
+        else if(id == R.id.favourites){
+            if(firebaseUser!=null){
+                Intent intent=new Intent(MainActivity.this,FavouriteClass.class);
+                startActivity(intent);
+            }else {
+                Toast.makeText(this, "Please Sign in !!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, login.class);
+                startActivity(intent);
+            }
         }
         return false;
     }
@@ -292,6 +299,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
+    }
+
+    public void cartBtnClicked(View view) {
+        if(firebaseUser!=null){
+            Intent intent=new Intent(MainActivity.this,CartAdd.class);
+            startActivity(intent);
+        }else {
+            Toast.makeText(this, "Please Sign in !!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, login.class);
+            startActivity(intent);
+        }
+
+    }
+    public void userdata(){
+        mdatabaseref= FirebaseDatabase.getInstance().getReference("Users");
+        mdatabaseref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot postSnapshot:dataSnapshot.getChildren()){
+                    UserInfoClass pro=postSnapshot.getValue(UserInfoClass.class);
+                    if (firebaseUser!=null){
+                        if(firebaseUser.getEmail().equals(pro.getEmail())){
+                            nameTv=findViewById(R.id.person_nameTv);
+                            nameTv.setText(pro.getName());
+                            phoneTv=findViewById(R.id.phoneTv);
+                            phoneTv.setText(pro.getPhone());
+                            emailTv=findViewById(R.id.EmailTv);
+                            emailTv.setText(pro.getEmail());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                mprogressBar.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 }
 

@@ -21,6 +21,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
+            android:onClick="cartBtnClicked"
             android:background="@drawable/baseline_shopping_cart_black_24"
             android:foreground="?android:selectableItemBackground" />
 
