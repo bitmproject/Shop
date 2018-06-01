@@ -59,6 +59,7 @@ public class FavouriteClass extends AppCompatActivity implements NavigationView.
 
     ProgressBar mporgressbar;
     private FirebaseStorage mstorage;
+    TextView phoneTv,emailTv,countTv,nameTv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,16 +123,52 @@ public class FavouriteClass extends AppCompatActivity implements NavigationView.
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id=item.getItemId();
         if(id == R.id.home){
-            Intent intent=new Intent(FavouriteClass.this,MainActivity.class);
-            startActivity(intent);
+            Intent mainint=new Intent(FavouriteClass.this,MainActivity.class);
+            mainint.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(mainint);
         }
         else if(id == R.id.signout){
-            Intent intent=new Intent(FavouriteClass.this,login.class);
-            startActivity(intent);
+            if(firebaseUser!=null){
+                firebaseAuth.signOut();
+                Toast.makeText(this, "Signed Out", Toast.LENGTH_SHORT).show();
+                finish();
+                Intent mainint=new Intent(FavouriteClass.this,MainActivity.class);
+                mainint.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(mainint);
+
+            }else {
+                Intent intent = new Intent(FavouriteClass.this, login.class);
+                startActivity(intent);
+            }
         }
         else if(id == R.id.admin){
-            Intent intent=new Intent(FavouriteClass.this,Admin_Login.class);
-            startActivity(intent);
+            if(firebaseUser!=null){
+                Intent mainint=new Intent(FavouriteClass.this,Admin_Deshboard.class);
+                mainint.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(mainint);
+            }else {
+                Intent intent = new Intent(FavouriteClass.this, Admin_Login.class);
+                startActivity(intent);
+            }
+        }
+        else if(id == R.id.myorder){
+            if(firebaseUser!=null){
+                Intent intent=new Intent(FavouriteClass.this,AllOrders.class);
+                startActivity(intent);
+            }else {
+                Intent intent = new Intent(FavouriteClass.this, Admin_Login.class);
+                startActivity(intent);
+            }
+        }
+        else if(id == R.id.favourites){
+            if(firebaseUser!=null){
+                Intent intent=new Intent(FavouriteClass.this,FavouriteClass.class);
+                startActivity(intent);
+            }else {
+                Toast.makeText(this, "Please Sign in !!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(FavouriteClass.this, login.class);
+                startActivity(intent);
+            }
         }
         return false;
     }
@@ -218,6 +255,42 @@ public class FavouriteClass extends AppCompatActivity implements NavigationView.
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(FavouriteClass.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(actionBarDrawerToggle.onOptionsItemSelected(item)){
+            userdata();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void userdata() {
+        mdatabaseref= FirebaseDatabase.getInstance().getReference("Users");
+        mdatabaseref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot postSnapshot:dataSnapshot.getChildren()){
+                    UserInfoClass pro=postSnapshot.getValue(UserInfoClass.class);
+                    if (firebaseUser!=null){
+                        if(firebaseUser.getEmail().equals(pro.getEmail())){
+                            nameTv=findViewById(R.id.person_nameTv);
+                            nameTv.setText(pro.getName());
+                            phoneTv=findViewById(R.id.phoneTv);
+                            phoneTv.setText(pro.getPhone());
+                            emailTv=findViewById(R.id.EmailTv);
+                            emailTv.setText(pro.getEmail());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(FavouriteClass.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

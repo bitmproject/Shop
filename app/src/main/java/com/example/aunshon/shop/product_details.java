@@ -20,8 +20,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -45,6 +48,8 @@ public class product_details extends AppCompatActivity implements NavigationView
     private DatabaseReference mdatabaseRef,mdatabaseRef1,mdatabaseRef2;
     FirebaseUser firebaseUser;
     FirebaseAuth firebaseAuth;
+    TextView phoneTv,emailTv,countTv,nameTv;
+    DatabaseReference mdatabaseref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,10 +105,39 @@ public class product_details extends AppCompatActivity implements NavigationView
 
     public boolean onOptionsItemSelected(MenuItem item) {
         if(actionBarDrawerToggle.onOptionsItemSelected(item)){
+            userdata();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void userdata() {
+        mdatabaseref= FirebaseDatabase.getInstance().getReference("Users");
+        mdatabaseref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot postSnapshot:dataSnapshot.getChildren()){
+                    UserInfoClass pro=postSnapshot.getValue(UserInfoClass.class);
+                    if (firebaseUser!=null){
+                        if(firebaseUser.getEmail().equals(pro.getEmail())){
+                            nameTv=findViewById(R.id.person_nameTv);
+                            nameTv.setText(pro.getName());
+                            phoneTv=findViewById(R.id.phoneTv);
+                            phoneTv.setText(pro.getPhone());
+                            emailTv=findViewById(R.id.EmailTv);
+                            emailTv.setText(pro.getEmail());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(product_details.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -113,31 +147,6 @@ public class product_details extends AppCompatActivity implements NavigationView
             Intent mainint=new Intent(product_details.this,MainActivity.class);
             mainint.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(mainint);
-        }
-        else if(id==R.id.catagory){
-
-        }
-        else if(id==R.id.myorder){
-
-        }
-        else if(id==R.id.favourites){
-            if(firebaseUser!=null){
-                Intent intent=new Intent(product_details.this,FavouriteClass.class);
-                startActivity(intent);
-            }else {
-                Toast.makeText(this, "Please Sign in !!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(product_details.this, login.class);
-                startActivity(intent);
-            }
-        }
-        else if(id==R.id.admin){
-            if(firebaseUser!=null){
-                Intent intent=new Intent(product_details.this,Admin_Deshboard.class);
-                startActivity(intent);
-            }else {
-                Intent intent = new Intent(product_details.this, Admin_Login.class);
-                startActivity(intent);
-            }
         }
         else if(id == R.id.signout){
             if(firebaseUser!=null){
@@ -153,6 +162,35 @@ public class product_details extends AppCompatActivity implements NavigationView
                 startActivity(intent);
             }
         }
+        else if(id == R.id.admin){
+            if(firebaseUser!=null){
+                Intent mainint=new Intent(product_details.this,Admin_Deshboard.class);
+                mainint.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(mainint);
+            }else {
+                Intent intent = new Intent(product_details.this, Admin_Login.class);
+                startActivity(intent);
+            }
+        }
+        else if(id == R.id.myorder){
+            if(firebaseUser!=null){
+                Intent intent=new Intent(product_details.this,AllOrders.class);
+                startActivity(intent);
+            }else {
+                Intent intent = new Intent(product_details.this, Admin_Login.class);
+                startActivity(intent);
+            }
+        }
+        else if(id == R.id.favourites){
+            if(firebaseUser!=null){
+                Intent intent=new Intent(product_details.this,FavouriteClass.class);
+                startActivity(intent);
+            }else {
+                Toast.makeText(this, "Please Sign in !!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(product_details.this, login.class);
+                startActivity(intent);
+            }
+        }
         return false;
     }
 
@@ -162,54 +200,67 @@ public class product_details extends AppCompatActivity implements NavigationView
     }
 
     public void favouriteBtnClicked(View view) {
-        FirebaseUser current_user=FirebaseAuth.getInstance().getCurrentUser();
-        String uid=current_user.getUid();
+        if(firebaseUser!=null){
+            FirebaseUser current_user=FirebaseAuth.getInstance().getCurrentUser();
+            String uid=current_user.getUid();
 
-        //mDatabase= FirebaseDatabase.getInstance().getReference().child("Users").child(uid).child("favoutites").push();
-        mDatabase= FirebaseDatabase.getInstance().getReference().child("favourites").push();
-        // complex data storing
-        HashMap<String, String> usermap=new HashMap<>();
-        usermap.put("productTitle",title1);
-        usermap.put("productCatagory",catagory1);
-        usermap.put("productPrice",price1);
-        usermap.put("thumbnil",image1);
-        usermap.put("ftoken",uid);
-        String up=mdatabaseRef.push().getKey();
-        email=firebaseUser.getEmail();
-        FavouritePInfo favouritePInfo=new FavouritePInfo(title1,price1,catagory1,image1,email);
-        favouritePInfo.setMkey(up);
-        mdatabaseRef.child(up).setValue(favouritePInfo);
+            //mDatabase= FirebaseDatabase.getInstance().getReference().child("Users").child(uid).child("favoutites").push();
+            mDatabase= FirebaseDatabase.getInstance().getReference().child("favourites").push();
+            // complex data storing
+            HashMap<String, String> usermap=new HashMap<>();
+            usermap.put("productTitle",title1);
+            usermap.put("productCatagory",catagory1);
+            usermap.put("productPrice",price1);
+            usermap.put("thumbnil",image1);
+            usermap.put("ftoken",uid);
+            String up=mdatabaseRef.push().getKey();
+            email=firebaseUser.getEmail();
+            FavouritePInfo favouritePInfo=new FavouritePInfo(title1,price1,catagory1,image1,email);
+            favouritePInfo.setMkey(up);
+            mdatabaseRef.child(up).setValue(favouritePInfo);
 
-        Toast.makeText(product_details.this, "Added Favourite", Toast.LENGTH_SHORT).show();
-        Intent intent=new Intent(product_details.this,MainActivity.class);
-        startActivity(intent);
+            Toast.makeText(product_details.this, "Added Favourite", Toast.LENGTH_SHORT).show();
+            Intent intent=new Intent(product_details.this,MainActivity.class);
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(product_details.this, login.class);
+            startActivity(intent);
+        }
+
     }
 
     public void cartBtnClicked(View view) {
-        FirebaseUser current_user=FirebaseAuth.getInstance().getCurrentUser();
-        String uid=current_user.getUid();
+        if(firebaseUser!=null){
+            FirebaseUser current_user=FirebaseAuth.getInstance().getCurrentUser();
+            String uid=current_user.getUid();
 
-        //mDatabase= FirebaseDatabase.getInstance().getReference().child("Users").child(uid).child("favoutites").push();
-        mDatabase1= FirebaseDatabase.getInstance().getReference().child("recent_cart").push();
-        // complex data storing
-        HashMap<String, String> usermap=new HashMap<>();
-        usermap.put("productTitle",title1);
-        usermap.put("productCatagory",catagory1);
-        usermap.put("productPrice",price1);
-        usermap.put("thumbnil",image1);
-        usermap.put("ftoken",uid);
-        String up=mdatabaseRef1.push().getKey();
-        email=firebaseUser.getEmail();
-        cartmodel car=new cartmodel(title1,price1,catagory1,image1,email);
-        car.setMkey(up);
-        mdatabaseRef1.child(up).setValue(car);
+            //mDatabase= FirebaseDatabase.getInstance().getReference().child("Users").child(uid).child("favoutites").push();
+            mDatabase1= FirebaseDatabase.getInstance().getReference().child("recent_cart").push();
+            // complex data storing
+            HashMap<String, String> usermap=new HashMap<>();
+            usermap.put("productTitle",title1);
+            usermap.put("productCatagory",catagory1);
+            usermap.put("productPrice",price1);
+            usermap.put("thumbnil",image1);
+            usermap.put("ftoken",uid);
+            String up=mdatabaseRef1.push().getKey();
+            email=firebaseUser.getEmail();
+            cartmodel car=new cartmodel(title1,price1,catagory1,image1,email);
+            car.setMkey(up);
+            mdatabaseRef1.child(up).setValue(car);
 
-        Toast.makeText(product_details.this, "Added to cart", Toast.LENGTH_SHORT).show();
+            Toast.makeText(product_details.this, "Added to cart", Toast.LENGTH_SHORT).show();
 
-        addto();
-        Intent mainint=new Intent(product_details.this,MainActivity.class);
-        mainint.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(mainint);
+            addto();
+            Intent mainint=new Intent(product_details.this,MainActivity.class);
+            mainint.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(mainint);
+
+        }else {
+            Intent intent = new Intent(product_details.this, login.class);
+            startActivity(intent);
+        }
+
 
     }
 

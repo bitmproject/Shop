@@ -23,13 +23,21 @@
                 android:background="@drawable/header_bg"
                 android:minHeight="?attr/actionBarSize"
                 android:theme="?attr/windowNoTitle" />
+            <Spinner
+                android:id="@+id/spinnerMain"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="58dp"
+                >
+
+            </Spinner>
             <android.support.v7.widget.RecyclerView
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:id="@+id/recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="58dp"
+                android:layout_marginTop="88dp"
                 android:background="@color/bac"
                 >
 

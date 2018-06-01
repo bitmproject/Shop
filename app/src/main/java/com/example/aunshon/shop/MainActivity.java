@@ -17,10 +17,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FirebaseUser firebaseUser;
     FirebaseAuth firebaseAuth;
     TextView phoneTv,emailTv,countTv,nameTv;
+    private Spinner spinner;
     String testEmail;
 
     @SuppressLint("WrongViewCast")
@@ -89,6 +93,91 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         firebaseUser=firebaseAuth.getCurrentUser();
         phoneTv=findViewById(R.id.phoneTv);
         emailTv=findViewById(R.id.EmailTv);
+        spinner=findViewById(R.id.spinnerMain);
+
+        ArrayAdapter<CharSequence> adapterSpinner=ArrayAdapter.createFromResource(MainActivity.this,R.array.catagory,android.R.layout.simple_spinner_item);
+        adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapterSpinner);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                tempProduct=new ArrayList<>();
+                recyclerView=findViewById(R.id.recyclerview);
+                recyclerView.setHasFixedSize(true);
+
+                myadapter=new RecyclerViewAdapter(MainActivity.this,tempProduct);
+                recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this,3));
+                recyclerView.setAdapter(myadapter);
+                mstorage=FirebaseStorage.getInstance();
+
+                mdatabaseref= FirebaseDatabase.getInstance().getReference("uploads");
+                mdatabaseref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        tempProduct.clear();
+                        for(DataSnapshot postSnapshot:dataSnapshot.getChildren()){
+                            porduct pro=postSnapshot.getValue(porduct.class);
+                            if(spinner.getSelectedItem().equals("No seleted catagory")){
+                                pro.setMkey(dataSnapshot.getKey());
+                                tempProduct.add(pro);
+                            }
+                            else if(spinner.getSelectedItem().equals("Pant")){
+                                if(pro.getProductCatagory().equals("Pant")){
+                                    pro.setMkey(dataSnapshot.getKey());
+                                    tempProduct.add(pro);
+                                }
+                            }
+                            else if(spinner.getSelectedItem().equals("Shirt")){
+                                if(pro.getProductCatagory().equals("Shirt")){
+                                    pro.setMkey(dataSnapshot.getKey());
+                                    tempProduct.add(pro);
+                                }
+                            }
+                            else if(spinner.getSelectedItem().equals("Phone")){
+                                if(pro.getProductCatagory().equals("Phone")){
+                                    pro.setMkey(dataSnapshot.getKey());
+                                    tempProduct.add(pro);
+                                }
+                            }
+                            else if(spinner.getSelectedItem().equals("Laptop")){
+                                if(pro.getProductCatagory().equals("Laptop")){
+                                    pro.setMkey(dataSnapshot.getKey());
+                                    tempProduct.add(pro);
+                                }
+                            }
+                            else if(spinner.getSelectedItem().equals("Shoe")){
+                                if(pro.getProductCatagory().equals("Shoe")){
+                                    pro.setMkey(dataSnapshot.getKey());
+                                    tempProduct.add(pro);
+                                }
+                            }
+
+                        }
+                        myadapter.notifyDataSetChanged();
+                        mprogressBar.setVisibility(View.INVISIBLE);
+                        if(firebaseUser!= null){
+                            countm();
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        mprogressBar.setVisibility(View.INVISIBLE);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
         actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
@@ -248,8 +337,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id=item.getItemId();
         if(id == R.id.home){
-            Intent intent=new Intent(MainActivity.this,MainActivity.class);
-            startActivity(intent);
+            Intent mainint=new Intent(MainActivity.this,MainActivity.class);
+            mainint.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(mainint);
         }
         else if(id == R.id.signout){
             if(firebaseUser!=null){
@@ -267,8 +357,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else if(id == R.id.admin){
             if(firebaseUser!=null){
-                Intent intent=new Intent(MainActivity.this,Admin_Deshboard.class);
-                startActivity(intent);
+                Intent mainint=new Intent(MainActivity.this,Admin_Deshboard.class);
+                mainint.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(mainint);
             }else {
                 Intent intent = new Intent(MainActivity.this, Admin_Login.class);
                 startActivity(intent);
@@ -340,6 +431,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
+
 }
 
 //below code for  catagory;
